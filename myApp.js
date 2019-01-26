@@ -15,17 +15,37 @@ var app = express();
 
 
 /** 3) Serve an HTML file */
+let absolutePath = __dirname +  "/views/index.html"
+
+function sendResp (req, res) {
+    res.sendFile(absolutePath); 
+}
+
+app.get("/", sendResp);
+
 
 
 /** 4) Serve static assets  */
-
+//middlewares are functions that intercept route handlers, adding some kind of information. A middleware needs to be mounted using the method 
+const assetPath = __dirname + "/public";
+const serveStatic = express.static(assetPath);
+app.use(serveStatic);
 
 /** 5) serve JSON on a specific route */
+let heresJson = {"message": "Hello json"};
 
+function sendJson (req, res) {
+    if(process.env.MESSAGE_STYLE == "uppercase") {
+      let upperMessage = heresJson.message.toUpperCase()
+        heresJson = {"message": upperMessage}     
+    } 
+    res.json(heresJson);
+  };
+
+  app.get("/json", sendJson);
 
 /** 6) Use the .env file to configure the app */
- 
- 
+    
 /** 7) Root-level Middleware - A logger */
 //  place it before all the routes !
 
@@ -50,14 +70,6 @@ var app = express();
 
 // This would be part of the basic setup of an Express app
 // but to allow FCC to run tests, the server is already active
-let absolutePath = __dirname +  "/views/index.html"
-
-function sendResp (req, res) {
-    res.sendFile(absolutePath); 
-}
-
-app.get("/", sendResp);
-
 app.listen(process.env.PORT || 3000 ); 
 
 //---------- DO NOT EDIT BELOW THIS LINE --------------------
