@@ -3,7 +3,15 @@ var express = require('express');
 var app = express();
 
 // --> 7)  Mount the Logger middleware here
+/** 7) Root-level Middleware - A logger */
+//  place it before all the routes !
 
+function logger(req, res, next) {
+  let logString = `${req.method} ${req.path} - ${req.ip}`;
+  console.log(logString);
+  next();
+}
+app.use(logger);
 
 // --> 11)  Mount the body-parser middleware  here
 
@@ -20,7 +28,7 @@ let absolutePath = __dirname +  "/views/index.html"
 function sendResp (req, res) {
     res.sendFile(absolutePath); 
 }
-
+//serve html file at the root path:
 app.get("/", sendResp);
 
 
@@ -35,23 +43,33 @@ app.use(serveStatic);
 let heresJson = {"message": "Hello json"};
 
 function sendJson (req, res) {
-    if(process.env.MESSAGE_STYLE == "uppercase") {
+    //if the env file message style variable is set to uppercase 
+  if(process.env.MESSAGE_STYLE == "uppercase") {
       let upperMessage = heresJson.message.toUpperCase()
-        heresJson = {"message": upperMessage}     
+      let returnRes = {"message": upperMessage} 
+      // return the json message with the message text set to uppercase
+      return res.json(returnRes)    
     } 
-    res.json(heresJson);
+    // else return the regular message as json
+    return res.json(heresJson);
   };
 
   app.get("/json", sendJson);
 
 /** 6) Use the .env file to configure the app */
     
-/** 7) Root-level Middleware - A logger */
-//  place it before all the routes !
 
 
 /** 8) Chaining middleware. A Time server */
-
+app.get('/now', function(req, res, next) {
+  //current time is added to the request object 
+  req.time = new Date().toString();
+    next();
+  }, function(req,res){
+    // response is sent as a json object showing current time
+    res.json({time: req.time})
+  }
+)
 
 /** 9)  Get input from client - Route parameters */
 
