@@ -1,5 +1,6 @@
 
 var express = require('express');
+var bodyParser = require("body-parser");
 var app = express();
 
 // --> 7)  Mount the Logger middleware here
@@ -14,7 +15,7 @@ function logger(req, res, next) {
 app.use(logger);
 
 // --> 11)  Mount the body-parser middleware  here
-
+app.use(bodyParser.urlencoded({extended: true}));
 
 /** 1) Meet the node console. */
 
@@ -53,7 +54,7 @@ function sendJson (req, res) {
     // else return the regular message as json
     return res.json(heresJson);
   };
-
+  // create route at /json and respond with json message on get request
   app.get("/json", sendJson);
 
 /** 6) Use the .env file to configure the app */
@@ -72,18 +73,38 @@ app.get('/now', function(req, res, next) {
 )
 
 /** 9)  Get input from client - Route parameters */
+function sendEcho(req, res) {
+  let word = req.params.word;
+  return res.json({echo: word});
+}
 
+app.get("/:word/echo", sendEcho);
 
 /** 10) Get input from client - Query parameters */
 // /name?first=<firstname>&last=<lastname>
-
+// the response returns a name object containing the input parameters from the url query
+function sendName(req, res) {
+  // The first and last parameters are derived from the request query object
+  return res.json({name: `${req.query.first} ${req.query.last}`})
+}
+function postName(req, res) {
+  // url query parameters are parsed and added to the req.query object
+  res.send(req.query);
+}
+// at the /name route url query parameters are posted and a name json object is returned
+app.route("/name").get(sendName).post(postName)
   
-/** 11) Get ready for POST Requests - the `body-parser` */
-// place it before all the routes !
 
 
 /** 12) Get data form POST  */
+function sendForm(req,res) {
+  return res.json({name: `${req.body.first.value} ${req.body.last.value}`})
+}
+function postForm(req,res) {
+  res.send(req.body)
+}
 
+app.route("/name").get(sendForm).post(postForm);
 
 
 // This would be part of the basic setup of an Express app
