@@ -54,13 +54,12 @@ var Person = mongoose.model("Person", personSchema);
 let person = new Person({
   name: "Tim",
   age: 32,
-  favoriteFoods: ["Squash, Pizza"]
+  favoriteFoods: [{
+    type: String
+  }]
 });
 
-person.save(function(error, data) {
-  return data;
-})
-
+ 
 // **Note**: GoMix is a real server, and in real servers interactions with
 // the db are placed in handler functions, to be called when some event happens
 // (e.g. someone hits an endpoint on your API). We'll follow the same approach
@@ -96,10 +95,16 @@ person.save(function(error, data) {
 //    ...do your stuff here...
 // });
 
-var createAndSavePerson = function(done) {
-  
-  done(null /*, data*/);
+// Save the person document
+person.save(createAndSavePerson);
 
+// Callback function that returns done after 1 ms
+var createAndSavePerson = function(done) {
+  setTimeout(function() {
+ 
+    // Call done function on finish
+    done(null, person);
+  }, 10);
 };
 
 /** 4) Create many People with `Model.create()` */
