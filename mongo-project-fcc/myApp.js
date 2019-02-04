@@ -44,7 +44,9 @@ let personSchema = new Schema({
     required: true,
   },
   age: Number,
-  favoriteFoods: [String]
+  favoriteFoods: [{
+    type: String
+  }]
 })
 
 
@@ -54,9 +56,7 @@ var Person = mongoose.model("Person", personSchema);
 let person = new Person({
   name: "Tim",
   age: 32,
-  favoriteFoods: [{
-    type: String
-  }]
+  favoriteFoods: ["pizza", "cake", "pie"]
 });
 
  
@@ -115,11 +115,34 @@ var createAndSavePerson = function(done) {
 // as the 1st argument, and saves them all in the db.
 // Create many people using `Model.create()`, using the function argument
 // 'arrayOfPeople'.
+let arrayOfPeople = [
+  {
+    name: "Tim",
+    age: 32,
+    favoriteFoods: ["pizza", "cake", "pie"]
+  },
+  {
+    name: "Angel",
+    age: 42,
+    favoriteFoods: ["salad", "rice", "fish"]
+  },
+  {
+    name: "Oscar",
+    age: 18,
+    favoriteFoods: ["steak", "cake", "cat"]
+  },
+];
+
+
 
 var createManyPeople = function(arrayOfPeople, done) {
     
-    done(null/*, data*/);
-    
+  Person.create(arrayOfPeople, (err, data) => {
+    if(err) {
+      done(err);
+    }
+      done(null, data);
+    });
 };
 
 /** # C[R]UD part II - READ #
@@ -133,9 +156,14 @@ var createManyPeople = function(arrayOfPeople, done) {
 // It supports an extremely wide range of search options. Check it in the docs.
 // Use the function argument `personName` as search key.
 
-var findPeopleByName = function(personName, done) {
+let findPeopleByName = function(personName, done) {
+  Person.find({name: personName}, (err, data) => {
+    if(err) {
+      done(err);
+    }
+    done(null, data);
   
-  done(null/*, data*/);
+  });
 
 };
 
