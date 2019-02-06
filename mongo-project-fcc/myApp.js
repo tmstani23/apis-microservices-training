@@ -176,9 +176,14 @@ let findPeopleByName = function(personName, done) {
 // using `Model.findOne() -> Person`. Use the function
 // argument `food` as search key
 
-var findOneByFood = function(food, done) {
-
-  done(null/*, data*/);
+let findOneByFood = function(food, done) {
+  Person.findOne({favoriteFoods: food}, (err, data) => {
+    if(err) {
+      done(err);
+    }
+    done(null, data);
+  
+  });
   
 };
 
@@ -191,10 +196,14 @@ var findOneByFood = function(food, done) {
 // using `Model.findById() -> Person`.
 // Use the function argument 'personId' as search key.
 
-var findPersonById = function(personId, done) {
-  
-  done(null/*, data*/);
-  
+let findPersonById = function(personId, done) {
+  Person.findById({_id: personId}, (err, data) => {
+    if(err) {
+      done(err);
+    }
+    console.log(data);
+    done(null, data);
+  }); 
 };
 
 /** # CR[U]D part III - UPDATE # 
@@ -224,8 +233,21 @@ var findPersonById = function(personId, done) {
 
 var findEditThenSave = function(personId, done) {
   var foodToAdd = 'hamburger';
-  
-  done(null/*, data*/);
+  // find person type in database with input id
+  Person.findById({_id: personId}, (err, data) => {
+    
+    
+    // update person's favorite food by adding input food to the array of foods
+    data.favoriteFoods.push(foodToAdd);
+    // save the newly updated person
+    data.save((err, data) => {
+      if(err) {
+        done(err);
+      } 
+      done(null, data);
+      console.log(data);
+    }); 
+  });
 };
 
 /** 9) New Update : Use `findOneAndUpdate()` */
@@ -243,10 +265,22 @@ var findEditThenSave = function(personId, done) {
 // to `findOneAndUpdate()`. By default the method
 // passes the unmodified object to its callback.
 
-var findAndUpdate = function(personName, done) {
-  var ageToSet = 20;
+let findAndUpdate = function(personName, done) {
+  let ageToSet = 20;
+  let query = {name: personName};
+  
+  // find a person and update the model with input data
+  // update follows this setup: Model.findOneAndUpdate(queryconditions, update, options, callback => {
+    // {new:true} is an option to specify returning the newly updated object
+  Person.findOneAndUpdate(query, {age: ageToSet}, {new:true}, (err, data) => {
+    if(err) {
+      done(err);
+    }
+    console.log(data);
+    done(null, data);
+    // return the newly updated person
+  }); 
 
-  done(null/*, data*/);
 };
 
 /** # CRU[D] part IV - DELETE #
