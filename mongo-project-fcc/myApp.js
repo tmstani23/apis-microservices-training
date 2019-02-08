@@ -50,7 +50,7 @@ let personSchema = new Schema({
 })
 
 
-var Person = mongoose.model("Person", personSchema);
+let Person = mongoose.model("Person", personSchema);
 
 // Create/Save person instance 
 let person = new Person({
@@ -70,7 +70,7 @@ let person = new Person({
 // **Warning** - When interacting with remote services, **errors may occur** !
 
 // - Example -
-// var someFunc = function(done) {
+// let someFunc = function(done) {
 //   ... do something (risky) ...
 //   if(error) return done(error);
 //   done(null, result);
@@ -99,7 +99,7 @@ let person = new Person({
 person.save(createAndSavePerson);
 
 // Callback function that returns done after 1 ms
-var createAndSavePerson = function(done) {
+let createAndSavePerson = function(done) {
   setTimeout(function() {
  
     // Call done function on finish
@@ -135,7 +135,7 @@ let arrayOfPeople = [
 
 
 
-var createManyPeople = function(arrayOfPeople, done) {
+let createManyPeople = function(arrayOfPeople, done) {
     
   Person.create(arrayOfPeople, (err, data) => {
     if(err) {
@@ -231,8 +231,8 @@ let findPersonById = function(personId, done) {
 // manually mark it as edited using `document.markModified('edited-field')`
 // (http://mongoosejs.com/docs/schematypes.html - #Mixed )
 
-var findEditThenSave = function(personId, done) {
-  var foodToAdd = 'hamburger';
+let findEditThenSave = function(personId, done) {
+  let foodToAdd = 'hamburger';
   // find person type in database with input id
   Person.findById({_id: personId}, (err, data) => {
     
@@ -293,9 +293,13 @@ let findAndUpdate = function(personName, done) {
 // previous update methods. They pass the removed document to the cb.
 // As usual, use the function argument `personId` as search key.
 
-var removeById = function(personId, done) {
-  
-  done(null/*, data*/);
+let removeById = function(personId, done) {
+  Person.findByIdAndRemove({_id: personId}, (err,data) => {
+    if(err) {
+      done(err);
+    }
+    done(null, data);
+  });
     
 };
 
@@ -309,10 +313,16 @@ var removeById = function(personId, done) {
 // containing the outcome of the operation, and the number of items affected.
 // Don't forget to pass it to the `done()` callback, since we use it in tests.
 
-var removeManyPeople = function(done) {
-  var nameToRemove = "Mary";
-
-  done(null/*, data*/);
+let removeManyPeople = function(done) {
+  let nameToRemove = "Mary";
+  Person.remove({name: nameToRemove}, (err, data) => {
+    if(err) {
+      done(err);
+    }
+    console.log(data);
+    done(null, data);
+  });
+  
 };
 
 /** # C[R]UD part V -  More about Queries # 
@@ -322,7 +332,7 @@ var removeManyPeople = function(done) {
 
 // If you don't pass the `callback` as the last argument to `Model.find()`
 // (or to the other similar search methods introduced before), the query is
-// not executed, and can even be stored in a variable for later use.
+// not executed, and can even be stored in a letiable for later use.
 // This kind of object enables you to build up a query using chaining syntax.
 // The actual db search is executed when you finally chain
 // the method `.exec()`, passing your callback to it.
@@ -333,10 +343,20 @@ var removeManyPeople = function(done) {
 // Chain `.find()`, `.sort()`, `.limit()`, `.select()`, and then `.exec()`,
 // passing the `done(err, data)` callback to it.
 
-var queryChain = function(done) {
-  var foodToSearch = "burrito";
+let queryChain = function(done) {
+  let foodToSearch = "burrito";
+  Person.find({favoriteFoods: foodToSearch})
+  .sort({name: +1})
+  .limit(2)
+  .select('-age')
+  .exec((err, data) => {
+    if(err) {
+      done(err)
+    }
+    console.log(data);
+    done(null, data);
+  });
   
-  done(null/*, data*/);
 };
 
 /** **Well Done !!**
