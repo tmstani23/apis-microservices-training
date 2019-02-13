@@ -1,2 +1,4 @@
 .env
 /mongo-project-fcc/node_modules
+/timestamp-service/node_modules
+/header-parser-service/node_modules
