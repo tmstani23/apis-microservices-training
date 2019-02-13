@@ -19,11 +19,6 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
-
 // function that validates if an input is a valid date object
 function isValidDate(d) {
   return d instanceof Date && !isNaN(d);
@@ -31,14 +26,8 @@ function isValidDate(d) {
 
 // route handler function that takes in a route and returns json with formatted timestamp information
 function timeStamp (req, res) {
-  let dateString = req.params.date_string 
-  let dateObject = new Date(dateString)
-  
-  // if datestring parameter is empty
-  if (dateString == "") {
-    let nowTime = new Date();
-    return res.json({"unix": nowTime.getTime(), "utc" : nowTime.toUTCString()})
-  }
+  let date_string = req.params.date_string 
+  let dateObject = new Date(date_string)
   
   // if url param datestring is not a valid date:
   if(!isValidDate(dateObject)) {
@@ -48,7 +37,14 @@ function timeStamp (req, res) {
   return res.json({"unix": dateObject.getTime(), "utc" : dateObject.toUTCString()});
 }
 
+//Route with date_string url parameter call timeStamp function for json response
 app.get("/api/timestamp/:date_string", timeStamp);
+
+// if no datestring parameter is entered return current timestamp at route
+app.get("/api/timestamp/", function (req, res) {
+  let nowTime = new Date();
+  return res.json({"unix": nowTime.getTime(), "utc" : nowTime.toUTCString()})
+});
 
 
 // listen for requests :)

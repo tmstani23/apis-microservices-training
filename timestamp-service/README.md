@@ -1,19 +1,32 @@
 
 # API Project: Timestamp Microservice for FCC
 
-### User stories :
 
-1. The API endpoint is `GET [project_url]/api/timestamp/:date_string?`
-2. A date string is valid if can be successfully parsed by `new Date(date_string)` (JS) . Note that the unix timestamp needs to be an **integer** (not a string) specifying **milliseconds**. In our test we will use date strings compliant with ISO-8601 (e.g. `"2016-11-20"`) because this will ensure an UTC timestamp.
-3. If the date string is **empty** it should be equivalent to trigger `new Date()`, i.e. the service uses the current timestamp.
-4. If the date string is **valid** the api returns a JSON having the structure 
-`{"unix": <date.getTime()>, "utc" : <date.toUTCString()> }`
-e.g. `{"unix": 1479663089000 ,"utc": "Sun, 20 Nov 2016 17:31:29 GMT"}`.
-5. If the date string is **invalid** the api returns a JSON having the structure `{"unix": null, "utc" : "Invalid Date" }`. It is what you get from the date manipulation functions used above.
+## Features
+
+* Timestamp service
+  * api endpoint at https://fcc-backend-projects.glitch.me/api/timestamp/
+  * Visit /timestamp to get the current time in unix and utc format 
+  * Add a valid timestamp format after the /timestamp to get the time displayed as utc and standard (see example usage at the bottom)
+  * Service returns invalid error in json format if incorrect date/time is input in the url
+
+* Express
+  * Used to run the server, manage routes and send json
+
+
+## Installation
+    * Clone the repository and install
+    * Make sure current version of node/npm is installed
+    * Visit source file of project and type cd timestamp-service in terminal to traverse into the project dir.
+    * Type npm install in terminal at project source path
+    * Type npm start to run the server
+    * Open browser to localhost:*portname service is listening on*
+
 
 #### Example usage:
-* https://curse-arrow.hyperdev.space/api/timestamp/2015-12-15
-* https://curse-arrow.hyperdev.space/api/timestamp/1450137600000
+* https://fcc-backend-projects.glitch.me/api/timestamp/2015-12-15
+* https://fcc-backend-projects.glitch.me/api/timestamp/1450137600000
+* https://fcc-backend-projects.glitch.me/api/timestamp/
 
 #### Example output:
 * { "unix": 1450137600, "natural": "December 15, 2015" }
