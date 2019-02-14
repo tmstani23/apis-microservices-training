@@ -1,7 +1,7 @@
 # Api and Microservices Project
 ===============================
 
-A series of small projects for learning Express, database operations in MongoDB, server routing and setup.
+A series of small projects for learning Express, database operations in MongoDB, server routing and setup.  This is part of a FreeCodeCamp dev challenge series. 
 
 ## Features
 
@@ -19,4 +19,4 @@ Please Visit: tmstani23.github.io
 
 ## Attributions
 
-A warm thanks for this course series to FCC and the community for providing guidance and support.
+A warm thanks to FCC for providing useful and engaging project challenges to help devs learn.
