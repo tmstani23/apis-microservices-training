@@ -5,6 +5,7 @@ var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var bodyParser = require("body-parser");
 var cors = require('cors');
+const dns = require('dns');
 let inputUrl = "";
 var app = express();
 
@@ -44,6 +45,16 @@ function postForm(req,res) {
   inputUrl = req.body.url;
   res.send({original_url: inputUrl, short_url:1})
 }
+
+// function to validate whether the input url is a real url
+function validateUrl(url) {
+  dns.lookup(url, (err, addresses) => {
+    if(err) {
+      return err;
+    }
+  });
+}
+console.log(validateUrl("https://www.google.com"));
 
 app.post("/api/shorturl/new", postForm);
 
