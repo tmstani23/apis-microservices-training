@@ -28,36 +28,74 @@ app.get('/', function(req, res){
 });
 
   
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+//Set Promise prototype to success/error instead of then/catch for resolving a promise
+Promise.prototype.success = Promise.prototype.then;
+Promise.prototype.error = Promise.prototype.catch;
+
+// function that checks if url is a valid server address
+function lookup(url) {
+  //Promise is used to handle async call to dns server 
+  return new Promise(function (resolve, reject) {
+      dns.lookup(url, function (err, address) {
+        if(err) {
+          //return promise object that is rejected with given reason
+          reject(err)
+        }
+        else {
+          //return promise object that is resolved with given value
+          resolve(address)
+        }
+      }) 
+  })       
+}                  
+
+//app.use("/api/shorturl/1", lookup)
+        
+app.use('/public', express.static(process.cwd() + '/public'));
+
+app.get('/', function(req, res){
+  res.sendFile(process.cwd() + '/views/index.html');
 });
 
 // Create new route using passed in form body
 app.get("/api/shorturl/1", function (req, res) {
-  //inputUrl = inputUrl.url; 
-  //console.log(inputUrl.url);
+//   redirect the user to the original posted url
   res.redirect(inputUrl);
 });
+
+//remove http/https from the input url so dnslookup functions correctly
+function parseUrl(url) {
+  //find index of w in string
+  let startParseIndex = url.indexOf('www');
+
+  //return new string starting from index to end
+  let parsedUrl = url.slice(8);
+  //return new parsed url or original url if 'www' is not in the url string
+  return startParseIndex == -1
+    ? url
+    : parsedUrl
+  
+}
 
 /** 12) Get data form POST  */
 function postForm(req,res) {
   inputUrl = req.body.url;
-  res.send({original_url: inputUrl, short_url:1})
+  let parsedInputUrl = parseUrl(inputUrl);
+  
+  
+  // function that performs a dns lookup on the url and returns success or error object.
+  lookup(parsedInputUrl)
+    //If promise is a success respond with json object containing original url and short url fields
+    .success(address => {
+      res.send({original_url: inputUrl, short_url:1})
+      })
+    //Else respond with an error message json object.
+    .error(e => res.send({error:"invalid URL"})) 
+  
 }
 
-// function to validate whether the input url is a real url
-function validateUrl(url) {
-  dns.lookup(url, (err, addresses) => {
-    if(err) {
-      return err;
-    }
-  });
-}
-console.log(validateUrl("https://www.google.com"));
-
+//Post input box's content at the route and call postForm handler
 app.post("/api/shorturl/new", postForm);
-
 
 app.listen(port, function () {
   console.log('Node.js listening on port' + port);
