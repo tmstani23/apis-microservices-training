@@ -80,21 +80,6 @@ function sendEcho(req, res) {
 
 app.get("/:word/echo", sendEcho);
 
-/** 10) Get input from client - Query parameters */
-// /name?first=<firstname>&last=<lastname>
-// the response returns a name object containing the input parameters from the url query
-  // function sendName(req, res) {
-  //   // The first and last parameters are derived from the request query object
-  //   return res.json({name: `${req.query.first} ${req.query.last}`})
-  // }
-  // function postName(req, res) {
-  //   // url query parameters are parsed and added to the req.query object
-  //   res.send(req.query);
-  // }
-// at the /name route url query parameters are posted and a name json object is returned
-//app.route("/name").get(sendName).post(postName)
-  
-
 
 /** 12) Get data form POST  */
 function postForm(req,res) {
