@@ -1,21 +1,31 @@
-# API Project: URL Shortener Microservice for freeCodeCamp
+# API Project: URL Shortener Microservice
+
+## Features
+
+* Url Shortener
+  * api endpoint hosted live at https://url-shortener-serv.glitch.me/
+  * Visit api endpoint and post a valid url in the form 
+     * A Json object is returned containing the url and a shortened url endpoint
+     * Visit the shortened url and you will be redirected to the original url you provided
+        * ex: [project_url]/api/shorturl/[shortenedurl]
+  * Service returns invalid error in json format if invalid or non-functioning site is posted in the form
+
+* Express
+  * Used to run the server, manage routes and send json
 
 
-### User Stories
+## Installation
+    * Clone the repository and install
+    * Make sure current version of node/npm is installed
+    * Visit source file of project and type cd url-shortener-microservice in terminal to traverse into the project dir.
+    * Type npm install in terminal at project source path
+    * Type npm start to run the server
+    * Open browser to localhost:3000
 
-1. I can POST a URL to `[project_url]/api/shorturl/new` and I will receive a shortened URL in the JSON response. Example : `{"original_url":"www.google.com","short_url":1}`
-2. If I pass an invalid URL that doesn't follow the valid `http(s)://www.example.com(/more/routes)` format, the JSON response will contain an error like `{"error":"invalid URL"}`. *HINT*: to be sure that the submitted url points to a valid site you can use the function `dns.lookup(host, cb)` from the `dns` core module.
-3. When I visit the shortened URL, it will redirect me to my original link.
 
+#### Example usage:
+* https://url-shortener-serv.glitch.me/
+* https://url-shortener-serv.glitch.me/api/shorturl/1
 
-#### Creation Example:
-
-POST [project_url]/api/shorturl/new - body (urlencoded) :  url=https://www.google.com
-
-#### Usage:
-
-[this_project_url]/api/shorturl/3
-
-#### Will redirect to:
-
-http://forum.freecodecamp.com
+#### Example output:
+* {original_url: "https://www.freecodecamp.com", short_url:1}

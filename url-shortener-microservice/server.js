@@ -12,17 +12,15 @@ var app = express();
 // Basic Configuration 
 var port = process.env.PORT || 3000;
 
-/** this project needs a db !! **/ 
-// mongoose.connect(process.env.MONGOLAB_URI);
-
 app.use(cors());
 
-/** this project needs to parse POST bodies **/
-// you should mount the body-parser here
+// Body parser middleware used for parsing message body in the url in a form post
 app.use(bodyParser.urlencoded({extended: false}));
 
+//Middleware that serves css  
 app.use('/public', express.static(process.cwd() + '/public'));
 
+// Root route that serves the html from the project views folder
 app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
 });
@@ -48,14 +46,6 @@ function lookup(url) {
       }) 
   })       
 }                  
-
-//app.use("/api/shorturl/1", lookup)
-        
-app.use('/public', express.static(process.cwd() + '/public'));
-
-app.get('/', function(req, res){
-  res.sendFile(process.cwd() + '/views/index.html');
-});
 
 // Create new route using passed in form body
 app.get("/api/shorturl/1", function (req, res) {
